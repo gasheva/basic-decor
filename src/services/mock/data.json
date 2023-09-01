@@ -1,0 +1,150 @@
+{
+  "errors": [],
+  "data": {
+    "categories": [
+      {
+        "id": 1,
+        "name": "Светильники",
+        "children": [
+          {
+            "id": 283,
+            "name": "Люстры"
+          },
+          {
+            "id": 939,
+            "name": "Дизайнерские светильники"
+          },
+          {
+            "id": 1347,
+            "name": "Комнаты"
+          }
+        ]
+      },
+      {
+        "id": 2300,
+        "name": "Подборки",
+        "children": [
+          {
+            "id": 2303,
+            "name": "Лофт стиль"
+          }
+        ]
+      }
+    ],
+    "products": [
+      {
+        "id": 844928,
+        "image": "url-картинки",
+        "name": "1 Люстра Garda Decor Alpina BD-844928",
+        "brand": "Garda Decor",
+        "vendor_sku": "1512-6P",
+        "url": "/lyustra-garda-decor-alpina-62gdw-903-600/",
+        "price": 30200,
+        "categories": [
+          283,
+          1
+        ]
+      },
+      {
+        "id": 844939,
+        "image": "url-of-image11",
+        "name": "Светильник FrostGuard Deluxe",
+        "brand": "ColdTech",
+        "vendor_sku": "CT102-7R",
+        "url": "/frostguard-deluxe-refrigerator/",
+        "price": 45200, 
+        "categories": [1, 939]
+      },
+      {
+        "id": 844940,
+        "image": "url-of-image12",
+        "name": "Люстра Pro",
+        "brand": "AquaWave",
+        "vendor_sku": "AW210-5W",
+        "url": "/washmaster-pro-washing-machine/",
+        "price": 38250, 
+        "categories": [1, 283]
+      },
+      {
+        "id": 844941,
+        "image": "url-of-image13",
+        "name": "UltraHeat Microwave Oven",
+        "brand": "QuickCook",
+        "vendor_sku": "QC304-2M",
+        "url": "/ultraheat-microwave-oven/",
+        "price": 17900, 
+        "categories": [2300, 2303]
+      },
+      {
+        "id": 844942,
+        "image": "url-of-image14",
+        "name": "Люстра Sonic",
+        "brand": "DirtAway",
+        "vendor_sku": "DA109-8V",
+        "url": "/sonicclean-vacuum-cleaner/",
+        "price": 21900, 
+        "categories": [1, 283]
+      },
+      {
+        "id": 844943,
+        "image": "url-of-image15",
+        "name": "Лампочки AirPure",
+        "brand": "ClimaControl",
+        "vendor_sku": "CC501-9A",
+        "url": "/airpure-max-air-conditioner/",
+        "price": 48900, 
+        "categories": [1, 1347]
+      },
+      {
+        "id": 844944,
+        "image": "url-of-image16",
+        "name": "Лампочки BrewElite",
+        "brand": "CafeRapid",
+        "vendor_sku": "CR207-3C",
+        "url": "/brewelite-coffee-machine/",
+        "price": 12900,
+        "categories": [1, 1347]
+      },
+      {
+        "id": 844945,
+        "image": "url-of-image17",
+        "name": "GrillKing Barbecue Grill",
+        "brand": "FlameMaster",
+        "vendor_sku": "FM301-6G",
+        "url": "/grillking-barbecue-grill/",
+        "price": 25700,
+        "categories": [2300, 2303]
+      },
+      {
+        "id": 844946,
+        "image": "url-of-image18",
+        "name": "SlicePro Electric Toaster",
+        "brand": "GoldenToast",
+        "vendor_sku": "GT205-1T",
+        "url": "/slicepro-electric-toaster/",
+        "price": 7900,
+        "categories": [2300, 2303]
+      },
+      {
+        "id": 844947,
+        "image": "url-of-image19",
+        "name": "FreshBlitz Juicer",
+        "brand": "FruitFusion",
+        "vendor_sku": "FF104-4J",
+        "url": "/freshblitz-juicer/",
+        "price": 8600,
+        "categories": [2300, 2303]
+      },
+      {
+        "id": 844948,
+        "image": "url-of-image20",
+        "name": "OmegaWave Dishwasher",
+        "brand": "CleanDish",
+        "vendor_sku": "CD408-0D",
+        "url": "/omegawave-dishwasher/",
+        "price": 41500,
+        "categories": [2300, 2303]
+      }
+    ]
+  }
+}
