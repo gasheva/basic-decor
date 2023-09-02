@@ -33,7 +33,6 @@ export default function useCategories() {
         }
       }
     }
-    console.log(categoryRoute)
     return categoryRoute
   }
 
