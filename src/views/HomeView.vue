@@ -1,38 +1,32 @@
 <script setup lang="ts">
 import {useRequests} from "@/composable/useRequests";
 import {computed, ref} from "vue";
-import { useRouter, useRoute } from 'vue-router'
+import {useRoute, useRouter} from 'vue-router'
 import ProductCard from "@/components/ProductCard.vue";
 import CategoryFilter from "@/components/CategoryFilter.vue";
 import type {Product} from "@/interfaces/Product";
 import type {Category} from "@/interfaces/Category";
+import {ALL_CATEGORIES_ID} from "@/consts";
+import {SORT_CRITERIA_LIST} from "@/components/sortFilter/consts";
+import type {SortCriteria} from "@/components/sortFilter/interfaces/SortCriteria";
+import SortFilter from "@/components/sortFilter/SortFilter.vue";
+import RemoveProducts from "@/components/removeProducts/removeProducts.vue";
 
-const CATEGORY_ID_SELECTED_ALL = -1;
+const defaultCategory: Category = {id: ALL_CATEGORIES_ID, name: 'Все товары'};
 
-interface ISortFilter {
-    id: string,
-    name: string,
-}
-const SORT_FILTERS: ISortFilter[] = [
-    {id: 'date', name: 'По дате добавления'},
-    {id: 'priceAsc', name: 'От дешевых к дорогим'},
-    {id: 'priceDesc', name: 'От дорогих к дешевым'},
-]
-const defaultCategory: Category = {id: CATEGORY_ID_SELECTED_ALL, name: 'Все товары'};
-
-const {fetch, remove} = useRequests();
+const {fetch: fetchAllData, remove: removeProduct} = useRequests();
 const router = useRouter();
 const route = useRoute();
 
-const products = ref<Product[]>([]);
-const categories = ref<Category[]>([]);
-const selectedCategory = ref<Category>(defaultCategory);
-const selectedSort = ref(SORT_FILTERS[0]);
+const
+    products = ref<Product[]>([]),
+    categories = ref<Category[]>([]),
+    selectedCategory = ref<Category>(defaultCategory),
+    selectedSortCriteria = ref(SORT_CRITERIA_LIST[0]),
+    displayedProducts = ref<Product[]>([]);
 
-const productsShown = ref<Product[]>([]);
-
-const selectedProductsCount = computed(() => {
-    return productsShown.value.filter(p => p.selected).length;
+const countOfSelectedProducts = computed(() => {
+    return displayedProducts.value.filter(p => p.selected).length;
 });
 
 const getCategoryFromRouter = () => {
@@ -62,67 +56,69 @@ const getCategoryFromRouter = () => {
     return categoryRoute;
 }
 
-const recalculateProducts = (products: Product[]) => {
-    let sorted: Product[] = [];
-    switch (selectedSort.value.id) {
+const updateDisplayedProducts = (products: Product[]) => {
+    let sortedProducts: Product[] = [];
+    switch (selectedSortCriteria.value.id) {
         case 'date':
-            sorted = sortByDate(); break;
+            sortedProducts = sortByDate(); break;
         case 'priceAsc':
-            sorted = sortByPriceAsc(products); break;
+            sortedProducts = sortByPriceAsc(products); break;
         case 'priceDesc':
-            sorted = sortByPriceDesc(products); break;
+            sortedProducts = sortByPriceDesc(products); break;
     }
-    const filtered = filterProductsByCategory(sorted, selectedCategory.value);
-    return filtered;
+    return filterProductsBySelectedCategory(sortedProducts, selectedCategory.value);
 };
 
-fetch().then((res) => {
-    products.value = res.data.data.products;
-    productsShown.value = [...products.value]
-    categories.value = res.data.data.categories;
-    categories.value = categories.value.map(c=>{
-        let childrenWithCounts: Category[] = [];
-        if(c.children) {
-             childrenWithCounts = c.children.map(child => {
-                const productsCount = products.value.filter(p => {
-                    return p.categories.includes(child.id)
-                }).length;
-                return {...child, productsCount}
-            })
+const enrichCategoriesWithProductCounts = (categories: Category[]): Category[] => {
+    return categories.map(category => {
+        let childCategoriesWithCounts: Category[] = [];
+        if(category.children) {
+            childCategoriesWithCounts = category.children.map(child => {
+                const associatedProductsCount = products.value.filter(product => product.categories.includes(child.id)).length;
+                return {...child, productsCount: associatedProductsCount};
+            });
         }
-        return {...c, children: childrenWithCounts}
-    })
+        return {...category, children: childCategoriesWithCounts};
+    });
+};
+
+fetchAllData().then((res) => {
+    products.value = res.data.data.products;
+    displayedProducts.value = [...products.value]
+
+    categories.value = res.data.data.categories;
+    categories.value = enrichCategoriesWithProductCounts(categories.value);
     categories.value.unshift(defaultCategory);
+
     const categoryFromRouter = getCategoryFromRouter();
     if(!categoryFromRouter) {
         router.push({name:'home'}).catch(()=>{})
         return;
     }
     selectedCategory.value = categoryFromRouter;
-})
+});
 
 
-const toggleProductSelection = (id:number) => {
-    const idx = productsShown.value.findIndex(p=>p.id === id)
+const toggleProductStatus = (productId:number) => {
+    const idx = displayedProducts.value.findIndex(p=>p.id === productId)
     if(idx === -1) {
         return;
     }
-    productsShown.value[idx] = {...productsShown.value[idx], selected:!productsShown.value[idx].selected};
+    displayedProducts.value[idx] = {...displayedProducts.value[idx], selected:!displayedProducts.value[idx].selected};
 };
 
-const deleteSelected = () => {
-    const ids = productsShown.value.filter(p=>p.selected).map(p=>p.id);
-
-    ids.forEach(id => {
-        remove(id).then(()=>{
+const removeSelectedProducts = () => {
+    const selectedProductIds = displayedProducts.value.filter(p=>p.selected).map(p=>p.id);
+    selectedProductIds.forEach(id => {
+        removeProduct(id).then(()=>{
             products.value = products.value.filter(p=>p.id !== id);
-            productsShown.value = recalculateProducts(products.value);
+            displayedProducts.value = updateDisplayedProducts(products.value);
         })
     })
 };
 
-const filterProductsByCategory = (products: Product[], val: Category) => {
-    if(val.id === CATEGORY_ID_SELECTED_ALL){
+const filterProductsBySelectedCategory = (products: Product[], val: Category) => {
+    if(val.id === ALL_CATEGORIES_ID){
         return products;
     }
 
@@ -131,10 +127,10 @@ const filterProductsByCategory = (products: Product[], val: Category) => {
     })
 }
 
-const onSelectCategory = (val: Category)=>{
+const setCategoryFilter = (val: Category)=>{
     selectedCategory.value = val;
-    productsShown.value = recalculateProducts(products.value);
-    if(val.id===CATEGORY_ID_SELECTED_ALL){
+    displayedProducts.value = updateDisplayedProducts(products.value);
+    if(val.id===ALL_CATEGORIES_ID){
         router.push({name:'home'}).catch(()=>{});
         return;
     }
@@ -142,7 +138,7 @@ const onSelectCategory = (val: Category)=>{
 }
 
 const toggleAllProducts = (val: boolean)=>{
-    productsShown.value = productsShown.value.map(p=>({...p, selected: val}));
+    displayedProducts.value = displayedProducts.value.map(p=>({...p, selected: val}));
 }
 
 const sortByDate = () => {
@@ -150,24 +146,20 @@ const sortByDate = () => {
 };
 
 const sortByPriceAsc = (products: Product[]) => {
-    const res = [...products].sort((a: Product, b: Product) => {
+    return [...products].sort((a: Product, b: Product) => {
         return a.price - b.price;
-    });
-
-    return res
+    })
 };
 
 const sortByPriceDesc = (products: Product[]) => {
-    const res = [...products].sort((a: Product, b: Product) => {
+    return [...products].sort((a: Product, b: Product) => {
         return b.price - a.price;
-    });
-
-    return res
+    })
 };
 
-const onSortChanged = (val: ISortFilter)=>{
-    selectedSort.value = val;
-    productsShown.value = recalculateProducts(products.value);
+const applySortCriteria = (val: SortCriteria)=>{
+    selectedSortCriteria.value = val;
+    displayedProducts.value = updateDisplayedProducts(products.value);
 }
 
 </script>
@@ -176,33 +168,18 @@ const onSortChanged = (val: ISortFilter)=>{
   <main>
       <div class="container-xl pb-5">
       <h1 class="mb-5">Избранное</h1>
-      <div class="d-flex align-items-center mb-4">
-          <span class="me-3">Сортировать:</span>
-          <button v-for="filter in SORT_FILTERS" :key="filter.name"
-                  class="btn btn-link p-0 me-3"
-                  :class="{[$style.sortLink]: true, active: filter.id === selectedSort.id, 'text-secondary': filter.id !== selectedSort.id}"
-                  @click.prevent="()=>onSortChanged(filter)">{{ filter.name }}
-          </button>
-      </div>
+      <sort-filter :selected-sort-criteria="selectedSortCriteria" @select="applySortCriteria"/>
 
-      <category-filter class="mb-4 mt-3" v-bind="{categories, selectedCategory}" @select="onSelectCategory" @toggle-all="toggleAllProducts"/>
+      <category-filter class="mb-4 mt-3" v-bind="{categories, selectedCategory}" @select="setCategoryFilter" @toggle-all="toggleAllProducts"/>
 
           <div class="row">
               <div class="col-9 d-flex flex-wrap">
                   <product-card
-                          v-for="product in productsShown" :key="product.id"
-                          v-bind="{product}" @toggle="toggleProductSelection" :class="$style.card"/>
+                          v-for="product in displayedProducts" :key="product.id"
+                          v-bind="{product}" @toggle="toggleProductStatus" :class="$style.card"/>
               </div>
               <div class="col-3">
-                  <div class="d-flex justify-content-end align-items-center">
-                  <span v-show="selectedProductsCount" class="text-secondary small text-nowrap me-3">
-                      Выбрано товаров: {{ selectedProductsCount }}
-                  </span>
-
-                      <button type="button" class="btn bg-white border-primary p-3" @click="deleteSelected">
-                          <i class="bi-trash-fill text-primary" :class="$style.icon"></i>
-                      </button>
-                  </div>
+                  <remove-products :count-of-selected-products="countOfSelectedProducts" @remove="removeSelectedProducts"/>
               </div>
           </div>
       </div>
@@ -212,14 +189,5 @@ const onSortChanged = (val: ISortFilter)=>{
 <style module>
 .card {
     flex-basis: calc(33.33% - 20px);
-}
-.sortLink {
-    text-decoration-style: dotted;
-}
-.icon {
-    display: block;
-    width: 24px;
-    height: 24px;
-    font-size: 20px;
 }
 </style>
