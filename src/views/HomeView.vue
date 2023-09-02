@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {useRequests} from "@/composable/useRequests";
-import {computed, ref} from "vue";
-import {useRoute, useRouter} from 'vue-router'
+import {computed, onMounted, ref} from "vue";
+import {useRouter} from 'vue-router'
 import ProductCard from "@/components/ProductCard.vue";
-import CategoryFilter from "@/components/CategoryFilter.vue";
+import CategoryFilter from "@/components/categoryFilter/CategoryFilter.vue";
 import type {Product} from "@/interfaces/Product";
 import type {Category} from "@/interfaces/Category";
 import {ALL_CATEGORIES_ID} from "@/consts";
@@ -11,50 +11,22 @@ import {SORT_CRITERIA_LIST} from "@/components/sortFilter/consts";
 import type {SortCriteria} from "@/components/sortFilter/interfaces/SortCriteria";
 import SortFilter from "@/components/sortFilter/SortFilter.vue";
 import RemoveProducts from "@/components/removeProducts/removeProducts.vue";
-
-const defaultCategory: Category = {id: ALL_CATEGORIES_ID, name: 'Все товары'};
+import {defaultCategory} from "@/components/categoryFilter/consts";
+import useCategories from "@/composable/useCategories";
 
 const {fetch: fetchAllData, remove: removeProduct} = useRequests();
 const router = useRouter();
-const route = useRoute();
 
 const
     products = ref<Product[]>([]),
-    categories = ref<Category[]>([]),
-    selectedCategory = ref<Category>(defaultCategory),
     selectedSortCriteria = ref(SORT_CRITERIA_LIST[0]),
     displayedProducts = ref<Product[]>([]);
+
+const {categories, selectedCategory, getCategoryFromRouter, enrichCategoriesWithProductCounts, setCategoryFilter} = useCategories();
 
 const countOfSelectedProducts = computed(() => {
     return displayedProducts.value.filter(p => p.selected).length;
 });
-
-const getCategoryFromRouter = () => {
-    if(route.name==='home'){
-        return defaultCategory;
-    }
-    const id = Number(route.params.id);
-    if(!id || isNaN(id)) {
-        return defaultCategory;
-    }
-    let categoryRoute = null;
-    for (const category of categories.value) {
-        if(category.id === id) {
-            categoryRoute = category;
-            break;
-        }
-        if(category.children) {
-            for (const child of category.children) {
-                if(child.id === id) {
-                    categoryRoute = child;
-                    break;
-                }
-            }
-        }
-    }
-
-    return categoryRoute;
-}
 
 const updateDisplayedProducts = (products: Product[]) => {
     let sortedProducts: Product[] = [];
@@ -69,35 +41,26 @@ const updateDisplayedProducts = (products: Product[]) => {
     return filterProductsBySelectedCategory(sortedProducts, selectedCategory.value);
 };
 
-const enrichCategoriesWithProductCounts = (categories: Category[]): Category[] => {
-    return categories.map(category => {
-        let childCategoriesWithCounts: Category[] = [];
-        if(category.children) {
-            childCategoriesWithCounts = category.children.map(child => {
-                const associatedProductsCount = products.value.filter(product => product.categories.includes(child.id)).length;
-                return {...child, productsCount: associatedProductsCount};
-            });
-        }
-        return {...category, children: childCategoriesWithCounts};
-    });
-};
-
 fetchAllData().then((res) => {
     products.value = res.data.data.products;
-    displayedProducts.value = [...products.value]
 
     categories.value = res.data.data.categories;
-    categories.value = enrichCategoriesWithProductCounts(categories.value);
+    enrichCategoriesWithProductCounts(products.value);
     categories.value.unshift(defaultCategory);
 
     const categoryFromRouter = getCategoryFromRouter();
     if(!categoryFromRouter) {
-        router.push({name:'home'}).catch(()=>{})
+        setCategoryFilter(defaultCategory);
+        displayedProducts.value = updateDisplayedProducts(products.value)
         return;
     }
     selectedCategory.value = categoryFromRouter;
-});
+    displayedProducts.value = updateDisplayedProducts(products.value)
 
+});
+onMounted(()=>{
+    console.log('mounted');
+})
 
 const toggleProductStatus = (productId:number) => {
     const idx = displayedProducts.value.findIndex(p=>p.id === productId)
@@ -127,14 +90,9 @@ const filterProductsBySelectedCategory = (products: Product[], val: Category) =>
     })
 }
 
-const setCategoryFilter = (val: Category)=>{
-    selectedCategory.value = val;
+const onSelectCategoryFilter = (val: Category)=>{
+    setCategoryFilter(val);
     displayedProducts.value = updateDisplayedProducts(products.value);
-    if(val.id===ALL_CATEGORIES_ID){
-        router.push({name:'home'}).catch(()=>{});
-        return;
-    }
-    router.push({name:'selectedCategory', params: {id: val.id.toString()}}).catch(()=>{});
 }
 
 const toggleAllProducts = (val: boolean)=>{
@@ -167,10 +125,10 @@ const applySortCriteria = (val: SortCriteria)=>{
 <template>
   <main>
       <div class="container-xl pb-5">
-      <h1 class="mb-5">Избранное</h1>
+      <h1 class="mt-3 mb-5">Избранное</h1>
       <sort-filter :selected-sort-criteria="selectedSortCriteria" @select="applySortCriteria"/>
 
-      <category-filter class="mb-4 mt-3" v-bind="{categories, selectedCategory}" @select="setCategoryFilter" @toggle-all="toggleAllProducts"/>
+      <category-filter class="mb-4 mt-3" v-bind="{categories, selectedCategory}" @select="onSelectCategoryFilter" @toggle-all="toggleAllProducts"/>
 
           <div class="row">
               <div class="col-9 d-flex flex-wrap">
