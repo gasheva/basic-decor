@@ -8,14 +8,12 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      // children: [
-      //   {
-      //     path: '/category/:id',
-      //     name: 'selectedCategory',
-      //     component: HomeView,
-      //   }
-      // ]
     },
+    {
+      path: '/category/:id',
+      name: 'selectedCategory',
+      component: HomeView,
+    }
   ]
 })
 

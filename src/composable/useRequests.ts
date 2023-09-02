@@ -7,5 +7,11 @@ export const useRequests = ()=>{
         })
     }
 
-    return {fetch}
+    const remove = (id:number)=> {
+        return basicDecor.delete(`/favorite/${id}`).then((resp)=>{
+            return resp;
+        })
+    }
+
+    return {fetch, remove}
 }

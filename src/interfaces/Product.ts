@@ -7,4 +7,5 @@ export type Product = {
     url: string,
     price: number,
     categories: number[],
+    selected?: boolean,
 }

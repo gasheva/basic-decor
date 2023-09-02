@@ -34,8 +34,8 @@
     "products": [
       {
         "id": 844928,
-        "image": "url-картинки",
-        "name": "1 Люстра Garda Decor Alpina BD-844928",
+        "image": "https://images.pexels.com/photos/2549057/pexels-photo-2549057.jpeg?auto=compress&cs=tinysrgb&w=800",
+        "name": "Люстра Garda Decor Alpina BD-844928",
         "brand": "Garda Decor",
         "vendor_sku": "1512-6P",
         "url": "/lyustra-garda-decor-alpina-62gdw-903-600/",
@@ -47,7 +47,7 @@
       },
       {
         "id": 844939,
-        "image": "url-of-image11",
+        "image": "https://images.pexels.com/photos/1112598/pexels-photo-1112598.jpeg",
         "name": "Светильник FrostGuard Deluxe",
         "brand": "ColdTech",
         "vendor_sku": "CT102-7R",
@@ -57,7 +57,7 @@
       },
       {
         "id": 844940,
-        "image": "url-of-image12",
+        "image": "https://images.pexels.com/photos/699460/pexels-photo-699460.jpeg?auto=compress&cs=tinysrgb&w=800",
         "name": "Люстра Pro",
         "brand": "AquaWave",
         "vendor_sku": "AW210-5W",
@@ -67,7 +67,7 @@
       },
       {
         "id": 844941,
-        "image": "url-of-image13",
+        "image": "https://images.pexels.com/photos/5749098/pexels-photo-5749098.jpeg?auto=compress&cs=tinysrgb&w=800",
         "name": "UltraHeat Microwave Oven",
         "brand": "QuickCook",
         "vendor_sku": "QC304-2M",
@@ -77,7 +77,7 @@
       },
       {
         "id": 844942,
-        "image": "url-of-image14",
+        "image": "https://images.pexels.com/photos/37869/lamps-light-lampshade-screen-37869.jpeg?auto=compress&cs=tinysrgb&w=800",
         "name": "Люстра Sonic",
         "brand": "DirtAway",
         "vendor_sku": "DA109-8V",
@@ -87,7 +87,7 @@
       },
       {
         "id": 844943,
-        "image": "url-of-image15",
+        "image": "https://images.pexels.com/photos/1067465/pexels-photo-1067465.jpeg?auto=compress&cs=tinysrgb&w=800",
         "name": "Лампочки AirPure",
         "brand": "ClimaControl",
         "vendor_sku": "CC501-9A",
@@ -97,7 +97,7 @@
       },
       {
         "id": 844944,
-        "image": "url-of-image16",
+        "image": "https://images.pexels.com/photos/185699/pexels-photo-185699.jpeg?auto=compress&cs=tinysrgb&w=800",
         "name": "Лампочки BrewElite",
         "brand": "CafeRapid",
         "vendor_sku": "CR207-3C",
@@ -107,7 +107,7 @@
       },
       {
         "id": 844945,
-        "image": "url-of-image17",
+        "image": "https://images.pexels.com/photos/17947491/pexels-photo-17947491/free-photo-of-a-person-flipping-sausages-on-the-grill.jpeg?auto=compress&cs=tinysrgb&w=800",
         "name": "GrillKing Barbecue Grill",
         "brand": "FlameMaster",
         "vendor_sku": "FM301-6G",
@@ -117,7 +117,7 @@
       },
       {
         "id": 844946,
-        "image": "url-of-image18",
+        "image": "https://images.pexels.com/photos/5825716/pexels-photo-5825716.jpeg?auto=compress&cs=tinysrgb&w=800",
         "name": "SlicePro Electric Toaster",
         "brand": "GoldenToast",
         "vendor_sku": "GT205-1T",
@@ -127,7 +127,7 @@
       },
       {
         "id": 844947,
-        "image": "url-of-image19",
+        "image": "https://images.pexels.com/photos/5946802/pexels-photo-5946802.jpeg?auto=compress&cs=tinysrgb&w=800",
         "name": "FreshBlitz Juicer",
         "brand": "FruitFusion",
         "vendor_sku": "FF104-4J",
@@ -137,7 +137,7 @@
       },
       {
         "id": 844948,
-        "image": "url-of-image20",
+        "image": "https://images.pexels.com/photos/4107302/pexels-photo-4107302.jpeg?auto=compress&cs=tinysrgb&w=800",
         "name": "OmegaWave Dishwasher",
         "brand": "CleanDish",
         "vendor_sku": "CD408-0D",

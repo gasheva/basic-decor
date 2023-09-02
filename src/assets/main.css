@@ -5,3 +5,7 @@
 
   font-weight: normal;
 }
+
+.form-check-input[type=checkbox]:active {
+  filter: brightness(100%) !important;
+}
