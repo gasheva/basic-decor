@@ -40,10 +40,7 @@
         "vendor_sku": "1512-6P",
         "url": "/lyustra-garda-decor-alpina-62gdw-903-600/",
         "price": 30200,
-        "categories": [
-          283,
-          1
-        ]
+        "categories": [283, 1]
       },
       {
         "id": 844939,
@@ -52,7 +49,7 @@
         "brand": "ColdTech",
         "vendor_sku": "CT102-7R",
         "url": "/frostguard-deluxe-refrigerator/",
-        "price": 45200, 
+        "price": 45200,
         "categories": [1, 939]
       },
       {
@@ -62,7 +59,7 @@
         "brand": "AquaWave",
         "vendor_sku": "AW210-5W",
         "url": "/washmaster-pro-washing-machine/",
-        "price": 38250, 
+        "price": 38250,
         "categories": [1, 283]
       },
       {
@@ -72,7 +69,7 @@
         "brand": "QuickCook",
         "vendor_sku": "QC304-2M",
         "url": "/ultraheat-microwave-oven/",
-        "price": 17900, 
+        "price": 17900,
         "categories": [2300, 2303]
       },
       {
@@ -82,7 +79,7 @@
         "brand": "DirtAway",
         "vendor_sku": "DA109-8V",
         "url": "/sonicclean-vacuum-cleaner/",
-        "price": 21900, 
+        "price": 21900,
         "categories": [1, 283]
       },
       {
@@ -92,7 +89,7 @@
         "brand": "ClimaControl",
         "vendor_sku": "CC501-9A",
         "url": "/airpure-max-air-conditioner/",
-        "price": 48900, 
+        "price": 48900,
         "categories": [1, 1347]
       },
       {

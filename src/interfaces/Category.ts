@@ -1,6 +1,6 @@
 export type Category = {
-    id: number,
-    name: string,
-    children?: Category[],
-    productsCount?: number,
+  id: number
+  name: string
+  children?: Category[]
+  productsCount?: number
 }

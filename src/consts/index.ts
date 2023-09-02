@@ -1,1 +1,1 @@
-export const ALL_CATEGORIES_ID = -1;
+export const ALL_CATEGORIES_ID = -1
